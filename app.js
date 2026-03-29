@@ -6,6 +6,7 @@ const path = require('path');
 
 const authRoutes = require('./routes/auth');
 const adminRoutes = require('./routes/admin');
+const apiRoutes = require('./routes/events');
 const eventsRoutes = require('./routes/events');
 const calendarRoutes = require('./routes/calendar');
 const { requireAuth } = require('./lib/authorize');
@@ -31,6 +32,7 @@ app.use(session({
 }));
 
 // Routes
+app.use('/api', apiRoutes);
 app.use('/auth', authRoutes);
 app.use('/admin', adminRoutes);
 app.use('/dashboard/events', eventsRoutes);
