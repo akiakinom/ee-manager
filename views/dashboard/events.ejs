@@ -1,0 +1,54 @@
+<%- include('../partials/nav', { title: 'events', user }) %>
+
+  <div class="page-title">
+    <h2>events</h2>
+    <a class="btn" href="/dashboard/events/new">new</a>
+  </div>
+
+  <% if (events.length === 0) { %>
+    <p>no events yet.</p>
+  <% } else { %>
+  <table>
+    <thead>
+      <tr>
+        <th>image</th>
+        <th>title</th>
+        <th>location</th>
+        <th>date</th>
+        <th>author</th>
+        <th>status</th>
+        <th>actions</th>
+      </tr>
+    </thead>
+    <tbody>
+      <% events.forEach(e => { %>
+      <tr>
+        <td>
+          <% if (e.image) { %>
+            <img src="/uploads/<%= e.image %>" alt="">
+          <% } else { %>
+            &mdash;
+          <% } %>
+        </td>
+        <td><%= e.title %></td>
+        <td><%= e.location || '&mdash;' %></td>
+        <td><%= new Date(e.event_date).toLocaleString('pl-PL', { dateStyle: 'short', timeStyle: 'short' }) %></td>
+        <td><%= e.author %></td>
+        <td class="<%= e.is_published ? '' : 'unpublished' %>"><%= e.is_published ? 'published' : 'draft' %></td>
+        <td>
+          <a class="btn" href="/dashboard/events/<%= e.id %>/edit">edit</a>
+          <form action="/dashboard/events/<%= e.id %>/toggle" method="POST" style="display:inline">
+            <button class="btn" type="submit"><%= e.is_published ? 'unpublish' : 'publish' %></button>
+          </form>
+          <form action="/dashboard/events/<%= e.id %>/delete" method="POST" style="display:inline" onsubmit="return confirm('delete this event?')">
+            <button class="btn" type="submit">delete</button>
+          </form>
+        </td>
+      </tr>
+      <% }) %>
+    </tbody>
+  </table>
+  <% } %>
+
+</body>
+</html>

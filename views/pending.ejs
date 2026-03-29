@@ -1,0 +1,17 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>awaiting access</title>
+  <link rel="stylesheet" href="/css/global.css">
+</head>
+<body class="card-page">
+  <div class="card">
+    <h1>awaiting access</h1>
+    <p>hi <strong><%= user.name %></strong>, your account is pending. contact an admin to get assigned a role.</p>
+    <a class="btn" href="/auth/pending">refresh</a>
+    &nbsp;
+    <a class="btn" href="/auth/logout">logout</a>
+  </div>
+</body>
+</html>

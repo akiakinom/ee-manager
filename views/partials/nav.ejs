@@ -1,0 +1,21 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title><%= title || 'ee-manager' %></title>
+  <link rel="stylesheet" href="/css/global.css">
+</head>
+<body>
+  <header>
+    <span class="site-title">ee-manager</span>
+    <nav>
+      <a href="/dashboard">dashboard</a>
+      <a href="/dashboard/events">events</a>
+      <a href="/dashboard/calendar">calendar</a>
+      <% if (user.role === 'admin') { %>
+        <a href="/admin/users">users</a>
+      <% } %>
+      <a href="/auth/logout">logout</a>
+    </nav>
+  </header>
+  <p class="meta">logged in as <%= user.name %> &mdash; <%= user.role %></p>

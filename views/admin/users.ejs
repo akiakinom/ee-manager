@@ -1,0 +1,85 @@
+<%- include('../partials/nav', { title: 'users', user }) %>
+
+  <div class="page-title"><h2>users</h2></div>
+
+  <% if (pending.length > 0) { %>
+  <div class="section">
+    <h2>pending (<%= pending.length %>)</h2>
+    <table>
+      <thead>
+        <tr>
+          <th>name</th>
+          <th>usos id</th>
+          <th>joined</th>
+          <th>actions</th>
+        </tr>
+      </thead>
+      <tbody>
+        <% pending.forEach(u => { %>
+        <tr>
+          <td><%= u.name %></td>
+          <td><%= u.usos_id %></td>
+          <td><%= new Date(u.created_at).toLocaleDateString('pl-PL') %></td>
+          <td>
+            <form action="/admin/users/<%= u.usos_id %>/role" method="POST" style="display:inline">
+              <input type="hidden" name="role" value="editor">
+              <button class="btn" type="submit">make editor</button>
+            </form>
+            <form action="/admin/users/<%= u.usos_id %>/role" method="POST" style="display:inline">
+              <input type="hidden" name="role" value="admin">
+              <button class="btn" type="submit">make admin</button>
+            </form>
+            <form action="/admin/users/<%= u.usos_id %>/delete" method="POST" style="display:inline" onsubmit="return confirm('delete user?')">
+              <button class="btn" type="submit">delete</button>
+            </form>
+          </td>
+        </tr>
+        <% }) %>
+      </tbody>
+    </table>
+  </div>
+  <% } %>
+
+  <div class="section">
+    <h2>active (<%= active.length %>)</h2>
+    <table>
+      <thead>
+        <tr>
+          <th>name</th>
+          <th>usos id</th>
+          <th>role</th>
+          <th>joined</th>
+          <th>actions</th>
+        </tr>
+      </thead>
+      <tbody>
+        <% active.forEach(u => { %>
+        <tr>
+          <td><%= u.name %></td>
+          <td><%= u.usos_id %></td>
+          <td><%= u.role %></td>
+          <td><%= new Date(u.created_at).toLocaleDateString('pl-PL') %></td>
+          <td>
+            <% if (u.usos_id !== user.usos_id) { %>
+              <form action="/admin/users/<%= u.usos_id %>/role" method="POST" style="display:inline">
+                <input type="hidden" name="role" value="<%= u.role === 'admin' ? 'editor' : 'admin' %>">
+                <button class="btn" type="submit">make <%= u.role === 'admin' ? 'editor' : 'admin' %></button>
+              </form>
+              <form action="/admin/users/<%= u.usos_id %>/revoke" method="POST" style="display:inline">
+                <button class="btn" type="submit">revoke</button>
+              </form>
+              <form action="/admin/users/<%= u.usos_id %>/delete" method="POST" style="display:inline" onsubmit="return confirm('delete user?')">
+                <button class="btn" type="submit">delete</button>
+              </form>
+            <% } else { %>
+              <span class="unpublished">you</span>
+            <% } %>
+          </td>
+        </tr>
+        <% }) %>
+      </tbody>
+    </table>
+  </div>
+
+</body>
+</html>

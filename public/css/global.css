@@ -1,0 +1,247 @@
+/* ── Reset & Base ────────────────────────────────────────────── */
+*, *::before, *::after { box-sizing: border-box; }
+
+body {
+  font-family: monospace;
+  max-width: 960px;
+  margin: 40px auto;
+  padding: 0 20px;
+  background: #fff;
+  color: #111;
+  font-size: 14px;
+  line-height: 1.5;
+}
+
+/* ── Header & Nav ────────────────────────────────────────────── */
+header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  border-bottom: 1px solid #111;
+  padding-bottom: 10px;
+  margin-bottom: 30px;
+}
+
+.site-title { font-weight: bold; }
+
+nav a {
+  text-decoration: none;
+  color: #111;
+  margin-left: 4px;
+}
+
+/* ── Bracket style ───────────────────────────────────────────── */
+/* Applied to: nav links, action buttons, standalone links */
+nav a::before,
+.btn::before,
+a.btn::before { content: '['; }
+
+nav a::after,
+.btn::after,
+a.btn::after  { content: ']'; }
+
+nav a:hover,
+.btn:hover,
+a.btn:hover {
+  background: #111;
+  color: #fff;
+  cursor: pointer;
+}
+
+.btn {
+  font-family: monospace;
+  font-size: 0.88rem;
+  background: none;
+  border: none;
+  padding: 0;
+  color: #111;
+  text-decoration: none;
+  cursor: pointer;
+}
+
+/* ── Meta line ───────────────────────────────────────────────── */
+.meta {
+  font-size: 0.85rem;
+  color: #555;
+  margin-bottom: 30px;
+}
+
+/* ── Page title row ──────────────────────────────────────────── */
+.page-title {
+  display: flex;
+  align-items: baseline;
+  gap: 10px;
+  margin-bottom: 16px;
+}
+
+.page-title h2 {
+  font-size: 1rem;
+  margin: 0;
+}
+
+/* ── Tables ──────────────────────────────────────────────────── */
+table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 0.88rem;
+  margin-bottom: 20px;
+}
+
+th {
+  text-align: left;
+  border-bottom: 1px solid #111;
+  padding: 6px 8px 6px 0;
+}
+
+td {
+  padding: 8px 8px 8px 0;
+  border-bottom: 1px solid #eee;
+  vertical-align: middle;
+}
+
+td img {
+  width: 48px;
+  height: 36px;
+  object-fit: cover;
+  display: block;
+}
+
+.unpublished { color: #999; }
+
+/* ── Forms ───────────────────────────────────────────────────── */
+.field {
+  margin-bottom: 16px;
+}
+
+.field label {
+  display: block;
+  font-size: 0.82rem;
+  color: #555;
+  margin-bottom: 4px;
+}
+
+input[type=text],
+input[type=date],
+input[type=datetime-local],
+input[type=file],
+select,
+textarea {
+  width: 100%;
+  font-family: monospace;
+  font-size: 0.88rem;
+  border: 1px solid #ccc;
+  padding: 6px 8px;
+  background: #fff;
+  color: #111;
+}
+
+input[type=text]:focus,
+input[type=date]:focus,
+input[type=datetime-local]:focus,
+select:focus,
+textarea:focus {
+  outline: none;
+  border-color: #111;
+}
+
+input[type=file] { border: none; padding: 0; }
+
+textarea {
+  resize: vertical;
+  min-height: 100px;
+}
+
+.checkbox-row {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 0.88rem;
+}
+
+.checkbox-row label { margin: 0; color: #111; }
+
+/* Submit button (solid, no brackets) */
+button[type=submit].solid,
+.btn-solid {
+  font-family: monospace;
+  font-size: 0.9rem;
+  background: #111;
+  color: #fff;
+  border: none;
+  padding: 6px 16px;
+  cursor: pointer;
+}
+
+button[type=submit].solid:hover,
+.btn-solid:hover { background: #333; }
+
+.form-actions {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  margin-top: 24px;
+}
+
+.error {
+  color: #c00;
+  font-size: 0.88rem;
+  margin-bottom: 16px;
+}
+
+/* ── Inline add form (calendar page) ────────────────────────── */
+.add-form {
+  border-top: 1px solid #eee;
+  padding-top: 16px;
+  display: flex;
+  gap: 10px;
+  align-items: flex-end;
+  flex-wrap: wrap;
+}
+
+.add-form .field { margin-bottom: 0; }
+
+.add-form input,
+.add-form select { width: auto; }
+
+/* ── Sections ────────────────────────────────────────────────── */
+.section { margin-bottom: 48px; }
+
+.section-note {
+  font-size: 0.82rem;
+  color: #777;
+  margin: -8px 0 12px 0;
+}
+
+/* ── Thumbnail preview ───────────────────────────────────────── */
+.thumb-preview img {
+  width: 120px;
+  height: 80px;
+  object-fit: cover;
+  display: block;
+  margin-top: 4px;
+}
+
+.hint {
+  font-size: 0.8rem;
+  color: #999;
+  margin-top: 4px;
+}
+
+/* ── Centered card (login, pending, error) ───────────────────── */
+.card-page {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  min-height: 100vh;
+  margin: 0;
+}
+
+.card {
+  max-width: 400px;
+  width: 100%;
+  border: 1px solid #111;
+  padding: 2rem;
+}
+
+.card h1 { font-size: 1.1rem; margin-top: 0; }
+.card p  { color: #555; line-height: 1.6; }

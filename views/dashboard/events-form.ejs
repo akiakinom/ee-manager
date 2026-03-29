@@ -1,0 +1,58 @@
+<%- include('../partials/nav', { title: event && event.id ? 'edit event' : 'new event', user }) %>
+
+  <div class="page-title">
+    <h2><%= event && event.id ? 'edit event' : 'new event' %></h2>
+  </div>
+
+  <% if (error) { %><p class="error"><%= error %></p><% } %>
+
+  <form
+    action="<%= event && event.id ? `/dashboard/events/${event.id}/edit` : '/dashboard/events' %>"
+    method="POST"
+    enctype="multipart/form-data"
+    style="max-width:600px"
+  >
+    <div class="field">
+      <label>title *</label>
+      <input type="text" name="title" value="<%= event?.title || '' %>" required>
+    </div>
+
+    <div class="field">
+      <label>location</label>
+      <input type="text" name="location" value="<%= event?.location || '' %>">
+    </div>
+
+    <div class="field">
+      <label>date & time *</label>
+      <input type="datetime-local" name="event_date" value="<%= event?.event_date ? event.event_date.slice(0,16) : '' %>" required>
+    </div>
+
+    <div class="field">
+      <label>description</label>
+      <textarea name="description"><%= event?.description || '' %></textarea>
+    </div>
+
+    <div class="field">
+      <label>image</label>
+      <% if (event?.image) { %>
+        <div class="thumb-preview"><img src="/uploads/<%= event.image %>" alt=""></div>
+        <p class="hint">leave empty to keep current image</p>
+      <% } %>
+      <input type="file" name="image" accept="image/*">
+    </div>
+
+    <div class="field">
+      <div class="checkbox-row">
+        <input type="checkbox" name="is_published" id="is_published" value="1" <%= event?.is_published ? 'checked' : '' %>>
+        <label for="is_published">publish immediately</label>
+      </div>
+    </div>
+
+    <div class="form-actions">
+      <button type="submit" class="solid"><%= event && event.id ? 'save changes' : 'create event' %></button>
+      <a class="btn" href="/dashboard/events">cancel</a>
+    </div>
+  </form>
+
+</body>
+</html>
