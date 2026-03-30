@@ -26,24 +26,33 @@ router.get('/events', (req, res) => {
 router.get('/calendar', (req, res) => {
     const db = getDb();
 
-    const semesters = db.prepare(`
-        SELECT s.*, u.name as author
-        FROM calendar_semesters s
-        LEFT JOIN users u ON s.created_by = u.usos_id
-        WHERE is_published = 1
-        ORDER BY s.start_date DESC
-    `).all();
+  const semesters = db.prepare(`
+    SELECT s.*, u.name as author FROM calendar_semesters s
+    LEFT JOIN users u ON s.created_by = u.usos_id ORDER BY s.start_date DESC
+  `).all();
 
-    const substitutions = db.prepare(`
-        SELECT s.*, u.name as author
-        FROM calendar_substitutions s
-        LEFT JOIN users u ON s.created_by = u.usos_id
-        WHERE is_published = 1
-        ORDER BY s.original_date DESC
-    `).all();
+  const substitutions = db.prepare(`
+    SELECT s.*, u.name as author FROM calendar_substitutions s
+    LEFT JOIN users u ON s.created_by = u.usos_id ORDER BY s.original_date DESC
+  `).all();
+
+  const breaks = db.prepare(`
+    SELECT s.*, u.name as author FROM calendar_breaks s
+    LEFT JOIN users u ON s.created_by = u.usos_id ORDER BY s.date_from DESC
+  `).all();
+
+  const exams = db.prepare(`
+    SELECT s.*, u.name as author FROM calendar_exams s
+    LEFT JOIN users u ON s.created_by = u.usos_id ORDER BY s.date_from DESC
+  `).all();
+
+  const deans = db.prepare(`
+    SELECT s.*, u.name as author FROM calendar_deans_hours s
+    LEFT JOIN users u ON s.created_by = u.usos_id ORDER BY s.date DESC
+  `).all();
 
     return res.json({
-        semesters, substitutions
+        semesters, substitutions, breaks, exams, deans
     })
 });
 
