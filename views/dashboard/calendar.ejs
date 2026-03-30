@@ -2,21 +2,22 @@
 
   <div class="page-title"><h2>calendar</h2></div>
 
+  <%# ── helper macro: toggle+delete actions ── %>
+  <% function actions(table, id, published) { %>
+    <form action="/dashboard/calendar/<%= table %>/<%= id %>/toggle" method="POST" style="display:inline">
+      <button class="btn" type="submit"><%= published ? 'unpublish' : 'publish' %></button>
+    </form>
+    <form action="/dashboard/calendar/<%= table %>/<%= id %>/delete" method="POST" style="display:inline" onsubmit="return confirm('delete?')">
+      <button class="btn" type="submit">delete</button>
+    </form>
+  <% } %>
+
   <%# ── Semesters ── %>
   <div class="section">
     <h2>semester starts</h2>
-
     <% if (semesters.length > 0) { %>
     <table>
-      <thead>
-        <tr>
-          <th>semester id</th>
-          <th>start date</th>
-          <th>author</th>
-          <th>status</th>
-          <th>actions</th>
-        </tr>
-      </thead>
+      <thead><tr><th>semester id</th><th>start date</th><th>author</th><th>status</th><th>actions</th></tr></thead>
       <tbody>
         <% semesters.forEach(s => { %>
         <tr>
@@ -24,42 +25,17 @@
           <td><%= s.start_date %></td>
           <td><%= s.author %></td>
           <td class="<%= s.is_published ? '' : 'unpublished' %>"><%= s.is_published ? 'published' : 'draft' %></td>
-          <td>
-            <form action="/dashboard/calendar/semesters/<%= s.id %>/toggle" method="POST" style="display:inline">
-              <button class="btn" type="submit"><%= s.is_published ? 'unpublish' : 'publish' %></button>
-            </form>
-            <form action="/dashboard/calendar/semesters/<%= s.id %>/delete" method="POST" style="display:inline" onsubmit="return confirm('delete?')">
-              <button class="btn" type="submit">delete</button>
-            </form>
-          </td>
+          <td><%- actions('calendar_semesters', s.id, s.is_published) %></td>
         </tr>
         <% }) %>
       </tbody>
     </table>
-    <% } else { %>
-      <p class="unpublished">no semesters yet.</p>
-    <% } %>
-
+    <% } else { %><p class="unpublished">no entries yet.</p><% } %>
     <form action="/dashboard/calendar/semesters" method="POST" class="add-form">
-      <div class="field">
-        <label>semester id</label>
-        <input type="text" name="semester_id" placeholder="e.g. 2026L" required>
-      </div>
-      <div class="field">
-        <label>start date</label>
-        <input type="date" name="start_date" required>
-      </div>
-      <div class="field">
-        <label>&nbsp;</label>
-        <div class="checkbox-row">
-          <input type="checkbox" name="is_published" id="sem_pub" value="1">
-          <label for="sem_pub">publish</label>
-        </div>
-      </div>
-      <div class="field">
-        <label>&nbsp;</label>
-        <button type="submit" class="solid">add</button>
-      </div>
+      <div class="field"><label>semester id</label><input type="text" name="semester_id" placeholder="e.g. 2025L" required></div>
+      <div class="field"><label>start date</label><input type="date" name="start_date" required></div>
+      <div class="field"><label>&nbsp;</label><div class="checkbox-row"><input type="checkbox" name="is_published" id="sem_pub" value="1"><label for="sem_pub">publish</label></div></div>
+      <div class="field"><label>&nbsp;</label><button type="submit" class="solid">add</button></div>
     </form>
   </div>
 
@@ -67,18 +43,9 @@
   <div class="section">
     <h2>substitution days</h2>
     <p class="section-note">on the original date, classes are held as if it were the selected weekday.</p>
-
     <% if (substitutions.length > 0) { %>
     <table>
-      <thead>
-        <tr>
-          <th>original date</th>
-          <th>taught as</th>
-          <th>author</th>
-          <th>status</th>
-          <th>actions</th>
-        </tr>
-      </thead>
+      <thead><tr><th>original date</th><th>taught as</th><th>author</th><th>status</th><th>actions</th></tr></thead>
       <tbody>
         <% substitutions.forEach(s => { %>
         <tr>
@@ -86,49 +53,117 @@
           <td><%= days[s.day_of_week] %> (<%= s.day_of_week %>)</td>
           <td><%= s.author %></td>
           <td class="<%= s.is_published ? '' : 'unpublished' %>"><%= s.is_published ? 'published' : 'draft' %></td>
-          <td>
-            <form action="/dashboard/calendar/substitutions/<%= s.id %>/toggle" method="POST" style="display:inline">
-              <button class="btn" type="submit"><%= s.is_published ? 'unpublish' : 'publish' %></button>
-            </form>
-            <form action="/dashboard/calendar/substitutions/<%= s.id %>/delete" method="POST" style="display:inline" onsubmit="return confirm('delete?')">
-              <button class="btn" type="submit">delete</button>
-            </form>
-          </td>
+          <td><%- actions('calendar_substitutions', s.id, s.is_published) %></td>
         </tr>
         <% }) %>
       </tbody>
     </table>
-    <% } else { %>
-      <p class="unpublished">no substitutions yet.</p>
-    <% } %>
-
+    <% } else { %><p class="unpublished">no entries yet.</p><% } %>
     <form action="/dashboard/calendar/substitutions" method="POST" class="add-form">
-      <div class="field">
-        <label>original date</label>
-        <input type="date" name="original_date" required>
-      </div>
-      <div class="field">
-        <label>taught as</label>
+      <div class="field"><label>original date</label><input type="date" name="original_date" required></div>
+      <div class="field"><label>taught as</label>
         <select name="day_of_week" required>
           <option value="">-- day --</option>
-          <option value="1">monday (1)</option>
-          <option value="2">tuesday (2)</option>
-          <option value="3">wednesday (3)</option>
-          <option value="4">thursday (4)</option>
+          <option value="1">monday (1)</option><option value="2">tuesday (2)</option>
+          <option value="3">wednesday (3)</option><option value="4">thursday (4)</option>
           <option value="5">friday (5)</option>
         </select>
       </div>
-      <div class="field">
-        <label>&nbsp;</label>
-        <div class="checkbox-row">
-          <input type="checkbox" name="is_published" id="sub_pub" value="1">
-          <label for="sub_pub">publish</label>
-        </div>
+      <div class="field"><label>&nbsp;</label><div class="checkbox-row"><input type="checkbox" name="is_published" id="sub_pub" value="1"><label for="sub_pub">publish</label></div></div>
+      <div class="field"><label>&nbsp;</label><button type="submit" class="solid">add</button></div>
+    </form>
+  </div>
+
+  <%# ── Breaks ── %>
+  <div class="section">
+    <h2>breaks</h2>
+    <% if (breaks.length > 0) { %>
+    <table>
+      <thead><tr><th>type</th><th>from</th><th>to</th><th>author</th><th>status</th><th>actions</th></tr></thead>
+      <tbody>
+        <% breaks.forEach(s => { %>
+        <tr>
+          <td><%= s.type %></td>
+          <td><%= s.date_from %></td>
+          <td><%= s.date_to %></td>
+          <td><%= s.author %></td>
+          <td class="<%= s.is_published ? '' : 'unpublished' %>"><%= s.is_published ? 'published' : 'draft' %></td>
+          <td><%- actions('calendar_breaks', s.id, s.is_published) %></td>
+        </tr>
+        <% }) %>
+      </tbody>
+    </table>
+    <% } else { %><p class="unpublished">no entries yet.</p><% } %>
+    <form action="/dashboard/calendar/breaks" method="POST" class="add-form">
+      <div class="field"><label>type</label>
+        <select name="type" required>
+          <option value="">-- type --</option>
+          <option value="winter">winter</option>
+          <option value="easter">easter</option>
+          <option value="summer">summer</option>
+        </select>
       </div>
-      <div class="field">
-        <label>&nbsp;</label>
-        <button type="submit" class="solid">add</button>
-      </div>
+      <div class="field"><label>from</label><input type="date" name="date_from" required></div>
+      <div class="field"><label>to</label><input type="date" name="date_to" required></div>
+      <div class="field"><label>&nbsp;</label><div class="checkbox-row"><input type="checkbox" name="is_published" id="brk_pub" value="1"><label for="brk_pub">publish</label></div></div>
+      <div class="field"><label>&nbsp;</label><button type="submit" class="solid">add</button></div>
+    </form>
+  </div>
+
+  <%# ── Exam seasons ── %>
+  <div class="section">
+    <h2>exam seasons</h2>
+    <% if (exams.length > 0) { %>
+    <table>
+      <thead><tr><th>from</th><th>to</th><th>author</th><th>status</th><th>actions</th></tr></thead>
+      <tbody>
+        <% exams.forEach(s => { %>
+        <tr>
+          <td><%= s.date_from %></td>
+          <td><%= s.date_to %></td>
+          <td><%= s.author %></td>
+          <td class="<%= s.is_published ? '' : 'unpublished' %>"><%= s.is_published ? 'published' : 'draft' %></td>
+          <td><%- actions('calendar_exams', s.id, s.is_published) %></td>
+        </tr>
+        <% }) %>
+      </tbody>
+    </table>
+    <% } else { %><p class="unpublished">no entries yet.</p><% } %>
+    <form action="/dashboard/calendar/exams" method="POST" class="add-form">
+      <div class="field"><label>from</label><input type="date" name="date_from" required></div>
+      <div class="field"><label>to</label><input type="date" name="date_to" required></div>
+      <div class="field"><label>&nbsp;</label><div class="checkbox-row"><input type="checkbox" name="is_published" id="exam_pub" value="1"><label for="exam_pub">publish</label></div></div>
+      <div class="field"><label>&nbsp;</label><button type="submit" class="solid">add</button></div>
+    </form>
+  </div>
+
+  <%# ── Dean's hours ── %>
+  <div class="section">
+    <h2>dean's hours</h2>
+    <p class="section-note">no classes during this time window on the specified date.</p>
+    <% if (deans.length > 0) { %>
+    <table>
+      <thead><tr><th>date</th><th>from</th><th>to</th><th>author</th><th>status</th><th>actions</th></tr></thead>
+      <tbody>
+        <% deans.forEach(s => { %>
+        <tr>
+          <td><%= s.date %></td>
+          <td><%= s.time_from %></td>
+          <td><%= s.time_to %></td>
+          <td><%= s.author %></td>
+          <td class="<%= s.is_published ? '' : 'unpublished' %>"><%= s.is_published ? 'published' : 'draft' %></td>
+          <td><%- actions('calendar_deans_hours', s.id, s.is_published) %></td>
+        </tr>
+        <% }) %>
+      </tbody>
+    </table>
+    <% } else { %><p class="unpublished">no entries yet.</p><% } %>
+    <form action="/dashboard/calendar/deans" method="POST" class="add-form">
+      <div class="field"><label>date</label><input type="date" name="date" required></div>
+      <div class="field"><label>from</label><input type="time" name="time_from" required></div>
+      <div class="field"><label>to</label><input type="time" name="time_to" required></div>
+      <div class="field"><label>&nbsp;</label><div class="checkbox-row"><input type="checkbox" name="is_published" id="deans_pub" value="1"><label for="deans_pub">publish</label></div></div>
+      <div class="field"><label>&nbsp;</label><button type="submit" class="solid">add</button></div>
     </form>
   </div>
 

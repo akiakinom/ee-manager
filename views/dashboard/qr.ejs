@@ -1,0 +1,46 @@
+<%- include('../partials/nav', { title: 'qr links', user }) %>
+
+  <div class="page-title">
+    <h2>qr links</h2>
+    <a class="btn" href="/dashboard/qr/new">new</a>
+  </div>
+
+  <% if (links.length === 0) { %>
+    <p>no qr links yet.</p>
+  <% } else { %>
+  <table>
+    <thead>
+      <tr>
+        <th>slug</th>
+        <th>label</th>
+        <th>target</th>
+        <th>scans</th>
+        <th>author</th>
+        <th>actions</th>
+      </tr>
+    </thead>
+    <tbody>
+      <% links.forEach(l => { %>
+      <tr>
+        <td><span style="color:<%= l.color %>">■</span> /qr/<%= l.slug %></td>
+        <td><%= l.label || '&mdash;' %></td>
+        <td style="max-width:200px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;">
+          <a href="<%= l.target_url %>" target="_blank" style="color:#111"><%= l.target_url %></a>
+        </td>
+        <td><%= l.scan_count %></td>
+        <td><%= l.author %></td>
+        <td>
+          <a class="btn" href="/dashboard/qr/<%= l.id %>/image.png">download</a>
+          <a class="btn" href="/dashboard/qr/<%= l.id %>/edit">edit</a>
+          <form action="/dashboard/qr/<%= l.id %>/delete" method="POST" style="display:inline" onsubmit="return confirm('delete this link?')">
+            <button class="btn" type="submit">delete</button>
+          </form>
+        </td>
+      </tr>
+      <% }) %>
+    </tbody>
+  </table>
+  <% } %>
+
+</body>
+</html>

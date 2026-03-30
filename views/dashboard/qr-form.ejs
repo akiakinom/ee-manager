@@ -1,0 +1,102 @@
+<%- include('../partials/nav', { title: link && link.id ? 'edit qr link' : 'new qr link', user }) %>
+
+  <div class="page-title">
+    <h2><%= link && link.id ? 'edit qr link' : 'new qr link' %></h2>
+  </div>
+
+  <% if (error) { %><p class="error"><%= error %></p><% } %>
+
+  <div style="display:flex;gap:40px;align-items:flex-start;flex-wrap:wrap;">
+    <form
+      id="qrForm"
+      action="<%= link && link.id ? `/dashboard/qr/${link.id}/edit` : '/dashboard/qr' %>"
+      method="POST"
+      style="max-width:460px;flex:1;"
+    >
+      <div class="field">
+        <label>slug *</label>
+        <div style="display:flex;align-items:center;gap:6px;">
+          <span style="color:#999;white-space:nowrap;">wrs.akinom.dev/qr/</span>
+          <input type="text" name="slug" id="slugInput" value="<%= link?.slug || '' %>" placeholder="elkonalia" required pattern="[a-z0-9\-]+" style="flex:1;">
+        </div>
+        <p class="hint">lowercase letters, numbers, hyphens only</p>
+      </div>
+
+      <div class="field">
+        <label>target URL *</label>
+        <input type="text" name="target_url" id="targetInput" value="<%= link?.target_url || '' %>" placeholder="https://facebook.com/events/..." required>
+      </div>
+
+      <div class="field">
+        <label>label <span style="color:#999">(optional display name)</span></label>
+        <input type="text" name="label" value="<%= link?.label || '' %>" placeholder="Elkonalia 2026">
+      </div>
+
+      <div class="field">
+        <label>qr color</label>
+        <div style="display:flex;align-items:center;gap:10px;">
+          <input type="color" name="color" id="colorInput" value="<%= link?.color || '#000000' %>" style="width:48px;height:32px;padding:2px;border:1px solid #ccc;cursor:pointer;">
+          <span id="colorHex" style="font-size:0.88rem;"><%= link?.color || '#000000' %></span>
+        </div>
+      </div>
+
+      <div class="form-actions">
+        <button type="submit" class="solid"><%= link && link.id ? 'save changes' : 'create link' %></button>
+        <a class="btn" href="/dashboard/qr">cancel</a>
+      </div>
+    </form>
+
+    <!-- Live QR preview -->
+    <div style="flex-shrink:0;text-align:center;">
+      <p style="font-size:0.82rem;color:#555;margin-bottom:8px;">preview</p>
+      <div id="qrPreview" style="width:200px; height:200px; border:1px solid #eee; display:flex; align-items:center; justify-content:center;"></div>
+      <p class="hint" id="previewUrl" style="margin-top:6px;word-break:break-all;max-width:200px;"></p>
+    </div>
+  </div>
+
+  <!-- qrcode.js for live preview (CDN, client-side only) -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
+  <script>
+    const slugInput   = document.getElementById('slugInput');
+    const colorInput  = document.getElementById('colorInput');
+    const colorHex    = document.getElementById('colorHex');
+    const previewUrl  = document.getElementById('previewUrl');
+    const qrPreviewContainer = document.getElementById('qrPreview');
+
+    let qr = null;
+
+    function getQrUrl() {
+      const slug = slugInput.value.trim() || 'preview';
+      return `<%= (process?.env?.APP_URL || 'http://localhost:6767') %>/qr/${slug}`;
+    }
+
+    function renderPreview() {
+      const url = getQrUrl();
+      const color = colorInput.value;
+
+      colorHex.textContent = color;
+      previewUrl.textContent = url;
+
+      // 1. Clear the container so QR codes don't stack
+      qrPreviewContainer.innerHTML = '';
+
+      // 2. Initialize on the DIV container
+      new QRCode(qrPreviewContainer, {
+        text: url,
+        width: 200,
+        height: 200,
+        colorDark: color,
+        colorLight: '#ffffff',
+        correctLevel: QRCode.CorrectLevel.H,
+      });
+    }
+
+    slugInput.addEventListener('input', renderPreview);
+    colorInput.addEventListener('input', renderPreview);
+
+    // Initial render
+    renderPreview();
+  </script>
+
+</body>
+</html>

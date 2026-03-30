@@ -4,11 +4,12 @@ const express = require('express');
 const session = require('express-session');
 const path = require('path');
 
+const apiRoutes = require('./routes/api');
 const authRoutes = require('./routes/auth');
 const adminRoutes = require('./routes/admin');
-const apiRoutes = require('./routes/api');
 const eventsRoutes = require('./routes/events');
 const calendarRoutes = require('./routes/calendar');
+const qrRoutes = require('./routes/qr');
 const { requireAuth } = require('./lib/authorize');
 
 const app = express();
@@ -32,11 +33,12 @@ app.use(session({
 }));
 
 // Routes
-app.use('/api', apiRoutes);
 app.use('/auth', authRoutes);
 app.use('/admin', adminRoutes);
+app.use('/api', apiRoutes);
 app.use('/dashboard/events', eventsRoutes);
 app.use('/dashboard/calendar', calendarRoutes);
+app.use('/', qrRoutes); // /qr/:slug redirect + /dashboard/qr CRUD
 
 app.get('/', (req, res) => res.redirect('/dashboard'));
 app.get('/dashboard', requireAuth, (req, res) => {
