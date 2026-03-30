@@ -9,7 +9,7 @@
   <div class="card">
     <h1>error</h1>
     <p><%= message %></p>
-    <pre style="font-size:0.8rem;overflow:auto;"><%= typeof error !== 'undefined' ? (error.stack || error) : '' %></pre>
+    <pre style="font-size:0.8rem;overflow:auto;"><%= error ? (error.stack || error) : '' %></pre>
     <a class="btn" href="/">go home</a>
   </div>
 </body>

@@ -13,10 +13,11 @@ router.get('/events', (req, res) => {
         SELECT e.*, u.name as author
         FROM student_events e
         LEFT JOIN users u ON e.created_by = u.usos_id
+        WHERE is_published = 1
         ORDER BY e.event_date DESC
     `).all();
 
-    return res.send( events )
+    return res.json( events )
 });
 
 /**
@@ -29,6 +30,7 @@ router.get('/calendar', (req, res) => {
         SELECT s.*, u.name as author
         FROM calendar_semesters s
         LEFT JOIN users u ON s.created_by = u.usos_id
+        WHERE is_published = 1
         ORDER BY s.start_date DESC
     `).all();
 
@@ -36,10 +38,11 @@ router.get('/calendar', (req, res) => {
         SELECT s.*, u.name as author
         FROM calendar_substitutions s
         LEFT JOIN users u ON s.created_by = u.usos_id
+        WHERE is_published = 1
         ORDER BY s.original_date DESC
     `).all();
 
-    return res.send({
+    return res.json({
         semesters, substitutions
     })
 });
