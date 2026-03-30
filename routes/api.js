@@ -16,7 +16,7 @@ router.get('/events', (req, res) => {
         ORDER BY e.event_date DESC
     `).all();
 
-    return res.send(events)
+    return res.send( events )
 });
 
 /**
@@ -43,3 +43,5 @@ router.get('/calendar', (req, res) => {
         semesters, substitutions
     })
 });
+
+module.exports = router;
